@@ -44,6 +44,7 @@ ACCEPTABLERPIVERSIONS = ['1.0','1.1'] # Which RPi versions are acceptable? (Igno
 print ('hello')
 print ('This is code.py for CircuitPython.')
 print ('This supports the Pimoroni Tiny2040 & Tiny2350 boards.')
+print ("This has been modified to run on basic Rasberry Pi Pico")
 
 # *Q* TODO: Test overclocking in CircuitPython (CP 7.2 on RP2040?)
 # from microcontroller import cpu as mctl_cpu
@@ -138,9 +139,9 @@ class statusled():
     """ Pimoroni Tiny2040 version of RGB LED handling.
         The RGB LED is a collection of three led() objects. """
     def __init__(self):
-        self.LedR = led(board.LED_R) # Create LED for RED channel.
-        self.LedG = led(board.LED_G) # Create LED for GREEN channel.
-        self.LedB = led(board.LED_B) # Create LED for BLUE channel.
+        self.LedR = led(board.GP20,True) # Create LED for RED channel.
+        self.LedG = led(board.GP19,True) # Create LED for GREEN channel.
+        self.LedB = led(board.GP18,True) # Create LED for BLUE channel.
         self.TaskList = {'idle': (False,False,False), # Off
                          'coms': (False,False,True), # Blue - Flashes when handling UART
                          'move': (False,True,False), # green - Flashes when motor is moving.
@@ -1638,14 +1639,14 @@ class steppermotor():
             self.StatusTimer.Reset() # We've sent the regular status message, decide when the next is due.
 
 # Define pins for motorcontroller chips.
-AzimuthStepBCM = GPIOpin(board.GP29,'azstep') # Tiny RP2040
-AltitudeStepBCM = GPIOpin(board.GP28,'altstep') # Tiny RP2040
-CommonDirectionBCM = GPIOpin(board.GP27,'dir') # Tiny RP2040
-CommonMode0BCM = GPIOpin(board.GP3,'mode0') # Tiny RP2040
-CommonMode1BCM = GPIOpin(board.GP4,'mode1') # Tiny RP2040
-CommonMode2BCM = GPIOpin(board.GP5,'mode2') # Tiny RP2040
-CommonEnableBCM = GPIOpin(board.GP2,'enable') # Tiny RP2040
-AzimuthFaultBCM = GPIOpin(board.GP6,'azfault') # Tiny RP2040
+AzimuthStepBCM = GPIOpin(board.GP15,'azstep') # Tiny RP2040
+AltitudeStepBCM = GPIOpin(board.GP14,'altstep') # Tiny RP2040
+CommonDirectionBCM = GPIOpin(board.GP13,'dir') # Tiny RP2040
+CommonMode0BCM = GPIOpin(board.GP12,'mode0') # Tiny RP2040
+CommonMode1BCM = GPIOpin(board.GP11,'mode1') # Tiny RP2040
+CommonMode2BCM = GPIOpin(board.GP10,'mode2') # Tiny RP2040
+CommonEnableBCM = GPIOpin(board.GP9,'enable') # Tiny RP2040
+AzimuthFaultBCM = GPIOpin(board.GP8,'azfault') # Tiny RP2040
 AltitudeFaultBCM = GPIOpin(board.GP7,'altfault') # Tiny RP2040
 
 AzimuthStepBCM.SetDirection(digitalio.Direction.OUTPUT)
@@ -1739,9 +1740,9 @@ class picosession():
             a single large packet of everything. Smaller messages work more reliably.
             codes: Optional extra flags added to status message (dev/test/debug etc)
             """
-        if CircuitPythonVersion.split('.')[0] in ['7','8']: pass # Supported CircuitPython version.
+        if CircuitPythonVersion.split('.')[0] in ['7','8','9']: pass # Supported CircuitPython version.
         else: # Unexpected CircuitPython version, report it back.
-            line = '# Expecting CircuitPython 7 or 8, found ' + str(CircuitPythonVersion)
+            line = '# Expecting CircuitPython 7 or 8 or 9, found ' + str(CircuitPythonVersion)
             RPi.Write(line) # Send over UART to RPi.
         line = "session status "
         i = time.time() - RPi.StartTime # Alive seconds. Use CPU clock not synchronised clock.
