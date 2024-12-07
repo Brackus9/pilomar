@@ -70,6 +70,14 @@ sudo apt install python3-astropy
 
 
 echo
+echo -e "==========================================================="
+echo -e "\E[36;40m$(date) Support for pyserial...\E[0m"
+echo $(date) pyserial - YES >>$pilomarlog
+sudo apt install python3-serial
+
+
+
+echo
 echo Cleanup apt-get space. 
 sudo apt autoremove
 sudo apt-get clean
